@@ -9,6 +9,7 @@ public class Main {
             System.out.println("\n=== MENÚ PRINCIPAL DE FUNCIONES RECURSIVAS ===");
             System.out.println("1. Calcular número de Fibonacci");
             System.out.println("2. Suma de subconjuntos (Subset Sum)");
+            System.out.println("3. Problema Sudoku");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
 
@@ -18,10 +19,12 @@ public class Main {
                 case 1:
                     Fibonacci.mostrarMenu();
                     break;
-
                 case 2:
                     Subsetsum.menu();
                     break;
+                case 3:
+                    Sudoku juego = new Sudoku();
+                    juego.menu();
                 case 0:
                     System.out.println("¡Hasta luego!");
                     break;
