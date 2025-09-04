@@ -35,12 +35,13 @@ public class Sudoku {
         return true;
     }
 
-    // Algoritmo de backtracking
+    // Algoritmo de backtracking con orden aleatorio en los números
     public boolean solveSudoku() {
         for (int row = 0; row < SIZE; row++) {
             for (int col = 0; col < SIZE; col++) {
                 if (board[row][col] == EMPTY) {
-                    for (int num = 1; num <= SIZE; num++) {
+                    int[] nums = generateRandomNumbers(); // <- orden aleatorio
+                    for (int num : nums) {
                         if (isSafe(row, col, num)) {
                             board[row][col] = num;
                             if (solveSudoku()) return true;
@@ -53,6 +54,22 @@ public class Sudoku {
         }
         return true;
     }
+
+    // Genera los números del 1 al 9 en orden aleatorio
+    private int[] generateRandomNumbers() {
+        int[] nums = new int[SIZE];
+        for (int i = 0; i < SIZE; i++) nums[i] = i + 1;
+
+        // Mezclamos con Fisher-Yates
+        for (int i = SIZE - 1; i > 0; i--) {
+            int j = rand.nextInt(i + 1);
+            int temp = nums[i];
+            nums[i] = nums[j];
+            nums[j] = temp;
+        }
+        return nums;
+    }
+
 
     // Mostrar tablero bonito
     public void printBoard() {
