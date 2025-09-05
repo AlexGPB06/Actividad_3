@@ -1,14 +1,17 @@
 //Alejandro Garcia Pelayo Banda 04/09/2025
 import java.util.Scanner;
 
+// Subsetsum.java
+import java.util.Scanner;
+
 public class Subsetsum {
 
     /**
-     * Clase para almacenar el resultado del subconjunto
+     * Clase para almacenar el resultado de la búsqueda de subconjuntos
      */
     public static class ResultadoSubconjunto {
-        public boolean existe;
-        public List<Integer> numerosSumados;
+        public boolean existe;              // Indica si existe un subconjunto que suma el objetivo
+        public List<Integer> numerosSumados; // Lista de números que forman el subconjunto
 
         public ResultadoSubconjunto(boolean existe, List<Integer> numerosSumados) {
             this.existe = existe;
@@ -17,36 +20,43 @@ public class Subsetsum {
     }
 
     /**
-     * Método recursivo para encontrar el subconjunto que suma 'target'
+     * Método principal para encontrar subconjunto que suma target
+     * @param lista Lista de números enteros
+     * @param target Valor objetivo a alcanzar
+     * @return ResultadoSubconjunto con existencia y números del subconjunto
      */
     public static ResultadoSubconjunto encontrarSubconjunto(List<Integer> lista, int target) {
         return encontrarSubconjuntoRecursivo(lista.getFirstNode(), target, new List<>());
     }
 
     /**
-     * Método recursivo auxiliar
+     * Método recursivo con BACKTRACKING para encontrar subconjunto
+     * @param nodo Nodo actual de la lista
+     * @param target Valor objetivo restante
+     * @param numerosActuales Lista temporal de números considerados
+     * @return ResultadoSubconjunto con la solución
      */
     private static ResultadoSubconjunto encontrarSubconjuntoRecursivo(Node<Integer> nodo, int target, List<Integer> numerosActuales) {
         if (target == 0) {
-            return new ResultadoSubconjunto(true, copiarLista(numerosActuales));
+            return new ResultadoSubconjunto(true, copiarLista(numerosActuales)); // SOLUCIÓN ENCONTRADA
         }
         if (nodo == null) {
-            return new ResultadoSubconjunto(false, new List<>());
+            return new ResultadoSubconjunto(false, new List<>()); // NO HAY SOLUCIÓN
         }
 
         int valorActual = nodo.data;
 
         if (valorActual > target) {
-            return encontrarSubconjuntoRecursivo(nodo.next, target, numerosActuales);
+            return encontrarSubconjuntoRecursivo(nodo.next, target, numerosActuales); // RECURSIVIDAD - saltar elemento
         }
 
-        // Excluir el elemento actual
+        // BACKTRACKING: Probar excluyendo el elemento actual
         ResultadoSubconjunto excluir = encontrarSubconjuntoRecursivo(nodo.next, target, numerosActuales);
         if (excluir.existe) {
             return excluir;
         }
 
-        // Incluir el elemento actual
+        // BACKTRACKING: Probar incluyendo el elemento actual
         List<Integer> nuevosNumeros = copiarLista(numerosActuales);
         nuevosNumeros.insertAtFirstPosition(valorActual);
         ResultadoSubconjunto incluir = encontrarSubconjuntoRecursivo(nodo.next, target - valorActual, nuevosNumeros);
@@ -55,11 +65,13 @@ public class Subsetsum {
             return incluir;
         }
 
-        return new ResultadoSubconjunto(false, new List<>());
+        return new ResultadoSubconjunto(false, new List<>()); // BACKTRACKING - retroceder
     }
 
     /**
-     * Método para copiar una lista
+     * Crea una copia profunda de una lista
+     * @param original Lista original a copiar
+     * @return Nueva lista con los mismos elementos
      */
     public static List<Integer> copiarLista(List<Integer> original) {
         List<Integer> copia = new List<>();
@@ -82,7 +94,9 @@ public class Subsetsum {
     }
 
     /**
-     * Método para mostrar una lista como string
+     * Convierte una lista a string con formato [element1, element2, ...]
+     * @param lista Lista a convertir
+     * @return String representando la lista
      */
     public static String listToString(List<Integer> lista) {
         StringBuilder sb = new StringBuilder("[");
@@ -99,7 +113,9 @@ public class Subsetsum {
     }
 
     /**
-     * Método para mostrar la operación de suma
+     * Muestra la operación de suma del subconjunto
+     * @param numeros Lista de números a sumar
+     * @return String con la operación matemática
      */
     public static String mostrarOperacion(List<Integer> numeros) {
         if (numeros.getFirstNode() == null) {
@@ -124,7 +140,8 @@ public class Subsetsum {
     }
 
     /**
-     * Método para ingresar números manualmente con control completo
+     * Permite ingresar números manualmente por consola
+     * @return Lista con los números ingresados
      */
     public static List<Integer> ingresarNumerosManual() {
         Scanner scanner = new Scanner(System.in);
@@ -147,7 +164,6 @@ public class Subsetsum {
                 lista.insertAtFirstPosition(numero);
                 contador++;
 
-                // Mostrar la lista actual
                 System.out.println("Lista actual: " + listToString(lista));
 
             } catch (NumberFormatException e) {
@@ -159,7 +175,9 @@ public class Subsetsum {
     }
 
     /**
-     * Método para modificar la lista existente
+     * Permite modificar una lista existente
+     * @param listaExistente Lista a modificar
+     * @return Lista modificada
      */
     public static List<Integer> modificarLista(List<Integer> listaExistente) {
         Scanner scanner = new Scanner(System.in);
@@ -192,11 +210,9 @@ public class Subsetsum {
 
                 case 2:
                     if (nuevaLista.getFirstNode() != null) {
-                        // Para eliminar el último necesitamos reconstruir la lista
                         List<Integer> temp = new List<>();
                         Node<Integer> current = nuevaLista.getFirstNode();
 
-                        // Saltarnos el primer elemento (que es el último insertado)
                         if (current.next != null) {
                             current = current.next;
                             while (current != null) {
@@ -226,7 +242,7 @@ public class Subsetsum {
     }
 
     /**
-     * Método menu principal mejorado
+     * Menú principal del programa Subset Sum
      */
     public static void menu() {
         Scanner scanner = new Scanner(System.in);
@@ -237,41 +253,25 @@ public class Subsetsum {
         List<Integer> lista;
         int objetivo;
 
-        System.out.println("\n1. Usar ejemplo predefinido [3, 34, 4, 12, 5, 2]");
-        System.out.println("2. Ingresar números manualmente");
-        System.out.println("3. Crear lista vacía y luego editarla");
+        System.out.println("1. Ingresar números manualmente");
+        System.out.println("2. Crear lista vacía y luego editarla");
         System.out.print("Seleccione una opción: ");
 
         int opcion = scanner.nextInt();
         scanner.nextLine(); // Limpiar buffer
 
         if (opcion == 1) {
-            // Ejemplo predefinido
-            lista = new List<>();
-            lista.insertAtFirstPosition(2);
-            lista.insertAtFirstPosition(5);
-            lista.insertAtFirstPosition(12);
-            lista.insertAtFirstPosition(4);
-            lista.insertAtFirstPosition(34);
-            lista.insertAtFirstPosition(3);
-            objetivo = 9;
-            System.out.println("Usando ejemplo: [3, 34, 4, 12, 5, 2]");
-
-        } else if (opcion == 2) {
-            // Ingreso manual completo
             lista = ingresarNumerosManual();
             System.out.print("Ingrese el valor objetivo: ");
             objetivo = scanner.nextInt();
 
         } else {
-            // Crear lista vacía y editar
             lista = new List<>();
             lista = modificarLista(lista);
             System.out.print("Ingrese el valor objetivo: ");
             objetivo = scanner.nextInt();
         }
 
-        // Mostrar confirmación
         System.out.println("\nLista final: " + listToString(lista));
         System.out.println("Objetivo: " + objetivo);
         System.out.print("¿Es correcto? (s/n): ");
@@ -282,9 +282,8 @@ public class Subsetsum {
             return;
         }
 
-        // Calcular
         long startTime = System.nanoTime();
-        ResultadoSubconjunto resultado = encontrarSubconjunto(lista, objetivo);
+        ResultadoSubconjunto resultado = encontrarSubconjunto(lista, objetivo); // BACKTRACKING + RECURSIVIDAD
         long endTime = System.nanoTime();
         long duration = endTime - startTime;
 
@@ -303,5 +302,4 @@ public class Subsetsum {
         System.out.println("Tiempo de ejecución: " + duration + " ns");
         System.out.println("Tiempo de ejecución: " + (duration / 1_000_000.0) + " ms");
     }
-
 }

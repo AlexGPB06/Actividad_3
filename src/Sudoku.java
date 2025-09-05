@@ -2,19 +2,29 @@
 import java.util.Random;
 import java.util.Scanner;
 
-public class Sudoku {
-    private int[][] board;
-    private static final int SIZE = 9;
-    private static final int EMPTY = 0;
-    private Random rand = new Random();
+import java.util.Random;
+import java.util.Scanner;
 
+public class Sudoku {
+    private int[][] board; // Matriz que representa el tablero de Sudoku
+    private static final int SIZE = 9; // Tamaño del tablero (9x9)
+    private static final int EMPTY = 0; // Valor que representa una celda vacía
+    private Random rand = new Random(); // Generador de números aleatorios
+
+    /**
+     * Constructor de la clase Sudoku.
+     * Inicializa el tablero como una matriz 9x9 vacía.
+     */
     public Sudoku() {
         board = new int[SIZE][SIZE];
     }
 
-    // Genera un tablero válido y lo "vacia" parcialmente
+    /**
+     * Genera un tablero válido de Sudoku y luego vacía parcialmente algunas celdas.
+     * @param holes - Número de celdas a vaciar (hacer agujeros) en el tablero
+     */
     public void generateBoard(int holes) {
-        solveSudoku(); // genera un tablero completo
+        solveSudoku(); // genera un tablero completo resolviéndolo
         for (int i = 0; i < holes; i++) {
             int row = rand.nextInt(SIZE);
             int col = rand.nextInt(SIZE);
@@ -22,11 +32,19 @@ public class Sudoku {
         }
     }
 
-    // Verifica si es seguro poner un número
+    /**
+     * Verifica si es seguro colocar un número en una posición específica.
+     * @param row - Fila donde se quiere colocar el número (0-8)
+     * @param col - Columna donde se quiere colocar el número (0-8)
+     * @param num - Número que se quiere colocar (1-9)
+     * @return true si es seguro colocar el número, false si no lo es
+     */
     private boolean isSafe(int row, int col, int num) {
+        // Verifica la fila y columna
         for (int i = 0; i < SIZE; i++) {
             if (board[row][i] == num || board[i][col] == num) return false;
         }
+        // Verifica el cuadrante 3x3
         int startRow = row - row % 3, startCol = col - col % 3;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -36,7 +54,12 @@ public class Sudoku {
         return true;
     }
 
-    // Algoritmo de backtracking con orden aleatorio en los números
+    /**
+     * Resuelve el Sudoku utilizando backtracking con recursividad.
+     * Se utiliza recursividad para probar diferentes combinaciones de números.
+     * Se aplica backtracking cuando una elección lleva a un callejón sin salida.
+     * @return true si se encontró una solución, false si no hay solución
+     */
     public boolean solveSudoku() {
         for (int row = 0; row < SIZE; row++) {
             for (int col = 0; col < SIZE; col++) {
@@ -44,19 +67,22 @@ public class Sudoku {
                     int[] nums = generateRandomNumbers(); // <- orden aleatorio
                     for (int num : nums) {
                         if (isSafe(row, col, num)) {
-                            board[row][col] = num;
-                            if (solveSudoku()) return true;
-                            board[row][col] = EMPTY;
+                            board[row][col] = num; // Asigna el número
+                            if (solveSudoku()) return true; // RECURSIVIDAD: llama a sí mismo
+                            board[row][col] = EMPTY; // BACKTRACKING: deshace la elección si no lleva a solución
                         }
                     }
-                    return false;
+                    return false; // BACKTRACKING: ninguna opción funcionó
                 }
             }
         }
-        return true;
+        return true; // Tablero completado exitosamente
     }
 
-    // Genera los números del 1 al 9 en orden aleatorio
+    /**
+     * Genera un array con los números del 1 al 9 en orden aleatorio.
+     * @return Array de enteros con números del 1-9 en orden aleatorio
+     */
     private int[] generateRandomNumbers() {
         int[] nums = new int[SIZE];
         for (int i = 0; i < SIZE; i++) nums[i] = i + 1;
@@ -71,8 +97,10 @@ public class Sudoku {
         return nums;
     }
 
-
-    // Mostrar tablero bonito
+    /**
+     * Muestra el tablero de Sudoku con formato visual atractivo.
+     * Incluye bordes y separadores para los cuadrantes 3x3.
+     */
     public void printBoard() {
         System.out.println("╔═════════════════════════════════╗");
         for (int i = 0; i < SIZE; i++) {
@@ -93,7 +121,10 @@ public class Sudoku {
         System.out.println("╚═════════════════════════════════╝");
     }
 
-    // Jugar manualmente
+    /**
+     * Permite al usuario jugar Sudoku manualmente.
+     * Solicita movimientos por consola hasta que el tablero esté completo.
+     */
     public void play() {
         Scanner sc = new Scanner(System.in);
         while (true) {
@@ -119,7 +150,10 @@ public class Sudoku {
         }
     }
 
-    // Verifica si está resuelto
+    /**
+     * Verifica si el tablero está completamente resuelto.
+     * @return true si no hay celdas vacías, false si hay al menos una celda vacía
+     */
     private boolean isSolved() {
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
@@ -129,6 +163,10 @@ public class Sudoku {
         return true;
     }
 
+    /**
+     * Muestra el menú principal del juego con opciones para el usuario.
+     * Permite elegir entre resolver automáticamente o jugar manualmente.
+     */
     public void menu() {
         Scanner sc = new Scanner(System.in);
         Sudoku sudoku;
