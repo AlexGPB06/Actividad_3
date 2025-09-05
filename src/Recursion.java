@@ -1,7 +1,4 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
+//Alejandro Garcia Pelayo Banda 04/09/2025
 
 public class Recursion {
     public Recursion() {

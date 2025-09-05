@@ -1,3 +1,4 @@
+//Alejandro Garcia Pelayo Banda 04/09/2025
 public class List<E> {
     Node<E> firstNode;
 

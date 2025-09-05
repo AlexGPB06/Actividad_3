@@ -1,3 +1,4 @@
+//Alejandro Garcia Pelayo Banda 04/09/2025
 import java.util.Scanner;
 
 public class Main {
@@ -11,7 +12,7 @@ public class Main {
             System.out.println("2. Suma de subconjuntos (Subset Sum)");
             System.out.println("3. Problema Sudoku");
             System.out.println("0. Salir");
-            System.out.print("Seleccione una opción: ");
+            System.out.print("Seleccione una opción  ");
 
             opcion = scanner.nextInt();
 
